@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Bot, Send, FileText, Sparkles, Loader2 } from "lucide-react";
 import { getAIRecommendations, getEventHistory, RISK_LEVELS } from "../services/riskEngine";
@@ -6,7 +6,7 @@ import { usePlan } from "../context/PlanContext";
 import { api } from "../services/api";
 
 /**
- * Renderiza texto markdown básico (negritas, cursiva, tablas, listas, headers, código inline)
+ * Renderiza texto markdown bÃ¡sico (negritas, cursiva, tablas, listas, headers, cÃ³digo inline)
  */
 function MarkdownText({ text }) {
   const lines = text.split('\n');
@@ -70,7 +70,7 @@ function MarkdownText({ text }) {
         inTable = true;
       }
       const cells = line.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
-      // Saltar la línea separadora (|---|---|)
+      // Saltar la lÃ­nea separadora (|---|---|)
       if (cells.every(c => /^[\s\-:]+$/.test(c))) {
         tableRows.push(cells); // keep it for slice(2) logic
         continue;
@@ -113,24 +113,24 @@ function MarkdownText({ text }) {
       continue;
     }
 
-    // Si terminó la lista
+    // Si terminÃ³ la lista
     if (inList) {
       flushList();
     }
 
-    // Línea vacía
+    // LÃ­nea vacÃ­a
     if (line.trim() === '') {
       elements.push(<div key={i} className="h-1.5" />);
       continue;
     }
 
-    // Cursiva standalone (líneas que empiezan con _)
+    // Cursiva standalone (lÃ­neas que empiezan con _)
     if (line.trim().startsWith('_') && line.trim().endsWith('_')) {
       elements.push(<p key={i} className="text-xs text-gray-500 italic mt-2">{formatInline(line.trim())}</p>);
       continue;
     }
 
-    // Párrafo normal
+    // PÃ¡rrafo normal
     elements.push(<p key={i} className="text-sm text-gray-300 leading-relaxed">{formatInline(line)}</p>);
   }
 
@@ -142,7 +142,7 @@ function MarkdownText({ text }) {
 }
 
 /**
- * Formato inline: negritas, cursiva, código, emojis
+ * Formato inline: negritas, cursiva, cÃ³digo, emojis
  */
 function formatInline(text) {
   if (!text) return text;
@@ -152,7 +152,7 @@ function formatInline(text) {
   let keyIdx = 0;
 
   while (remaining.length > 0) {
-    // Código inline `...`
+    // CÃ³digo inline `...`
     const codeMatch = remaining.match(/^(.*?)`([^`]+)`/);
     if (codeMatch) {
       if (codeMatch[1]) parts.push(codeMatch[1]);
@@ -179,7 +179,7 @@ function formatInline(text) {
       continue;
     }
 
-    // No hay más formato
+    // No hay mÃ¡s formato
     parts.push(remaining);
     break;
   }
@@ -201,22 +201,22 @@ function DeltaAIPage() {
       {
         role: "assistant",
         content:
-          "¡Hola! 👋 Soy **Delta AI**, tu asistente inteligente de seguridad financiera. Puedo ayudarte con análisis de riesgos, recomendaciones de seguridad y generación de reportes.\n\n¿En qué puedo asistirte hoy?",
+          "Â¡Hola! ðŸ‘‹ Soy **Delta AI**, tu asistente inteligente de seguridad financiera. Puedo ayudarte con anÃ¡lisis de riesgos, recomendaciones de seguridad y generaciÃ³n de reportes.\n\nÂ¿En quÃ© puedo asistirte hoy?",
       },
     ];
     if (contextRisk) {
       initial.push({
         role: "assistant",
-        content: `⚠️ He detectado un evento de riesgo ${RISK_LEVELS[contextRisk.level]?.label.toLowerCase()}: **"${contextRisk.title}"**. Aquí tienes mis recomendaciones automáticas.`,
+        content: `âš ï¸ He detectado un evento de riesgo ${RISK_LEVELS[contextRisk.level]?.label.toLowerCase()}: **"${contextRisk.title}"**. AquÃ­ tienes mis recomendaciones automÃ¡ticas.`,
       });
     }
     return initial;
   });
 
   const [suggestions, setSuggestions] = useState([
-    "¿Cuáles son las transacciones sospechosas?",
+    "Â¿CuÃ¡les son las transacciones sospechosas?",
     "Generar reporte de seguridad",
-    "¿Cuál es el nivel de riesgo actual?"
+    "Â¿CuÃ¡l es el nivel de riesgo actual?"
   ]);
 
   const history = getEventHistory();
@@ -224,7 +224,7 @@ function DeltaAIPage() {
     ? getAIRecommendations(contextRisk.level)
     : getAIRecommendations("medium");
 
-  // Auto-scroll al último mensaje
+  // Auto-scroll al Ãºltimo mensaje
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
@@ -255,14 +255,16 @@ function DeltaAIPage() {
       // Add notification
       const savedNotifs = localStorage.getItem("delta_notifications");
       const currentNotifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+      // eslint-disable-next-line react-hooks/purity -- Se ejecuta tras una accion del usuario.
+      const timestamp = Date.now();
       const newNotif = {
-        id: `NOTIF-AI-${Date.now()}`,
-        title: "Acción de Delta AI",
+        id: `NOTIF-AI-${timestamp}`,
+        title: "AcciÃ³n de Delta AI",
         message: `Se bloquearon ${action.payload.length} transacciones de alto riesgo.`,
         time: "Ahora",
         type: "success",
         read: false,
-        timestamp: Date.now()
+        timestamp
       };
       localStorage.setItem("delta_notifications", JSON.stringify([newNotif, ...currentNotifs]));
       window.dispatchEvent(new Event("delta_notifications_updated"));
@@ -303,7 +305,7 @@ function DeltaAIPage() {
         {
           role: "assistant",
           content:
-            "⚠️ Lo siento, hubo un error al procesar tu solicitud. Por favor intenta de nuevo.",
+            "âš ï¸ Lo siento, hubo un error al procesar tu solicitud. Por favor intenta de nuevo.",
         },
       ]);
     } finally {
@@ -314,7 +316,7 @@ function DeltaAIPage() {
 
   function handleSuggestionClick(suggestion) {
     setQuery(suggestion);
-    // Enviar automáticamente
+    // Enviar automÃ¡ticamente
     setMessages((prev) => [...prev, { role: "user", content: suggestion }]);
     setQuery("");
     setIsTyping(true);
@@ -331,7 +333,7 @@ function DeltaAIPage() {
       .catch(() => {
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: "⚠️ Error al procesar la solicitud." },
+          { role: "assistant", content: "âš ï¸ Error al procesar la solicitud." },
         ]);
       })
       .finally(() => setIsTyping(false));
@@ -342,10 +344,10 @@ function DeltaAIPage() {
       <div>
         <h1 className="text-white mb-2 text-2xl font-medium flex items-center gap-2">
           <Bot className="w-7 h-7 text-blue-400" />
-          Delta AI — Asistente Inteligente
+          Delta AI â€” Asistente Inteligente
         </h1>
         <p className="text-gray-400">
-          Consulta recomendaciones, análisis automático y generación de reportes
+          Consulta recomendaciones, anÃ¡lisis automÃ¡tico y generaciÃ³n de reportes
         </p>
       </div>
 
@@ -390,7 +392,7 @@ function DeltaAIPage() {
                     <Loader2 className="w-3 h-3 text-white animate-spin" />
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs text-gray-400">Delta AI está escribiendo</span>
+                    <span className="text-xs text-gray-400">Delta AI estÃ¡ escribiendo</span>
                     <span className="flex gap-0.5">
                       {[0, 1, 2].map(i => (
                         <span
@@ -410,7 +412,7 @@ function DeltaAIPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Sugerencias rápidas */}
+          {/* Sugerencias rÃ¡pidas */}
           {suggestions.length > 0 && !isTyping && (
             <div className="px-4 py-2 border-t border-gray-800/50 flex flex-wrap gap-2">
               {suggestions.map((sug, i) => (
@@ -432,7 +434,7 @@ function DeltaAIPage() {
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Consulta análisis, recomendaciones o reportes..."
+              placeholder="Consulta anÃ¡lisis, recomendaciones o reportes..."
               disabled={isTyping}
               className="flex-1 px-4 py-2.5 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
             />
@@ -451,12 +453,12 @@ function DeltaAIPage() {
           <div className="p-5 rounded-xl bg-[#13141b] border border-gray-800">
             <h3 className="text-white text-sm font-medium mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-blue-400" />
-              Recomendaciones automáticas
+              Recomendaciones automÃ¡ticas
             </h3>
             <ul className="space-y-2">
               {recommendations.map((rec) => (
                 <li key={rec} className="text-sm text-gray-400 flex gap-2">
-                  <span className="text-blue-400">•</span>
+                  <span className="text-blue-400">â€¢</span>
                   {rec}
                 </li>
               ))}
@@ -469,7 +471,7 @@ function DeltaAIPage() {
               Historial de eventos ({history.length})
             </h3>
             {history.length === 0 ? (
-              <p className="text-sm text-gray-500">Sin eventos registrados aún</p>
+              <p className="text-sm text-gray-500">Sin eventos registrados aÃºn</p>
             ) : (
               <ul className="space-y-2 max-h-48 overflow-auto">
                 {history.slice(0, 5).map((event) => (
@@ -490,3 +492,5 @@ function DeltaAIPage() {
 }
 
 export default DeltaAIPage;
+
+

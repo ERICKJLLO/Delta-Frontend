@@ -1,4 +1,4 @@
-const ONBOARDING_KEY = "delta_onboarding";
+﻿const ONBOARDING_KEY = "delta_onboarding";
 const USER_KEY = "delta_user";
 const SESSION_KEY = "delta_session";
 
@@ -57,7 +57,6 @@ export function activateAccount({ business, plan, password }) {
     companyName: business.companyName,
     nit: business.nit,
     contactName: business.contactName,
-    contactName: business.contactName,
     planId: plan.id,
     planName: plan.name,
     activatedAt: new Date().toISOString(),
@@ -66,3 +65,4 @@ export function activateAccount({ business, plan, password }) {
   clearOnboardingData();
   return user;
 }
+

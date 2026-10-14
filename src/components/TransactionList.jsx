@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Lock, Search, CheckCircle, HelpCircle, ShieldAlert } from "lucide-react";
+﻿import { useState, useEffect } from "react";
+import { Lock, Search, CheckCircle, ShieldAlert } from "lucide-react";
 import { usePlan } from "../context/PlanContext";
 
 const INITIAL_TRANSACTIONS = [
@@ -27,10 +27,10 @@ const INITIAL_TRANSACTIONS = [
     id: "TX-7480",
     amount: "$2,340.00",
     account: "****5621",
-    location: "México",
+    location: "MÃ©xico",
     time: "Hace 12 min",
     risk: "medium",
-    type: "Compra en línea",
+    type: "Compra en lÃ­nea",
     actionState: "pending"
   },
   {
@@ -47,7 +47,7 @@ const INITIAL_TRANSACTIONS = [
     id: "TX-7478",
     amount: "$890.00",
     account: "****4532",
-    location: "España",
+    location: "EspaÃ±a",
     time: "Hace 25 min",
     risk: "low",
     type: "Compra local",
@@ -68,7 +68,7 @@ const riskLabels = {
   medium: "Medio",
   low: "Bajo",
   blocked: "Bloqueada",
-  investigating: "En Investigación"
+  investigating: "En InvestigaciÃ³n"
 };
 
 function TransactionList({ searchQuery }) {
@@ -91,7 +91,7 @@ function TransactionList({ searchQuery }) {
     );
   });
 
-  // Guardar en localStorage cuando cambie y disparar evento de sincronización
+  // Guardar en localStorage cuando cambie y disparar evento de sincronizaciÃ³n
   const updateList = (newList) => {
     localStorage.setItem("delta_suspicious_transactions", JSON.stringify(newList));
     setTxList(newList);
@@ -110,19 +110,21 @@ function TransactionList({ searchQuery }) {
     return () => window.removeEventListener("delta_transactions_updated", handleSync);
   }, []);
 
-  // Agregar una notificación al popover global
+  // Agregar una notificaciÃ³n al popover global
   const addNotification = (title, message, type = "info") => {
     const saved = localStorage.getItem("delta_notifications");
     const currentNotifs = saved ? JSON.parse(saved) : [];
     
+    // eslint-disable-next-line react-hooks/purity -- Se ejecuta al crear una notificacion.
+    const timestamp = Date.now();
     const newNotif = {
-      id: `NOTIF-${Date.now()}`,
+      id: `NOTIF-${timestamp}`,
       title,
       message,
       time: "Ahora",
       type,
       read: false,
-      timestamp: Date.now()
+      timestamp
     };
     
     localStorage.setItem("delta_notifications", JSON.stringify([newNotif, ...currentNotifs]));
@@ -139,16 +141,16 @@ function TransactionList({ searchQuery }) {
     const transaction = txList.find(t => t.id === id);
     if (!transaction) return;
 
-    let updatedList = [...txList];
+    let updatedList;
     let toast = "";
 
     if (action === "safe") {
       // Si es segura, la removemos de la lista sospechosa
       updatedList = txList.filter(t => t.id !== id);
-      toast = `Transacción ${id} marcada como Segura y removida de alertas.`;
-      addNotification("Transacción Aprobada", `La transacción ${id} por valor de ${transaction.amount} ha sido marcada como Segura.`, "success");
+      toast = `TransacciÃ³n ${id} marcada como Segura y removida de alertas.`;
+      addNotification("TransacciÃ³n Aprobada", `La transacciÃ³n ${id} por valor de ${transaction.amount} ha sido marcada como Segura.`, "success");
     } else {
-      // Actualizar estado de acción (blocked | investigating)
+      // Actualizar estado de acciÃ³n (blocked | investigating)
       updatedList = txList.map(t => {
         if (t.id === id) {
           return { ...t, actionState: action };
@@ -157,11 +159,11 @@ function TransactionList({ searchQuery }) {
       });
 
       if (action === "blocked") {
-        toast = `Transacción ${id} bloqueada por sospecha de fraude.`;
-        addNotification("Transacción Bloqueada 🔒", `Se ha bloqueado preventivamente la transacción ${id} (${transaction.amount}).`, "error");
+        toast = `TransacciÃ³n ${id} bloqueada por sospecha de fraude.`;
+        addNotification("TransacciÃ³n Bloqueada ðŸ”’", `Se ha bloqueado preventivamente la transacciÃ³n ${id} (${transaction.amount}).`, "error");
       } else if (action === "investigating") {
-        toast = `Transacción ${id} enviada al panel de investigación de analistas.`;
-        addNotification("Bajo Investigación 🔍", `Iniciando protocolo de análisis avanzado en cuenta ${transaction.account} para ${id}.`, "info");
+        toast = `TransacciÃ³n ${id} enviada al panel de investigaciÃ³n de analistas.`;
+        addNotification("Bajo InvestigaciÃ³n ðŸ”", `Iniciando protocolo de anÃ¡lisis avanzado en cuenta ${transaction.account} para ${id}.`, "info");
       }
     }
 
@@ -175,7 +177,7 @@ function TransactionList({ searchQuery }) {
   return (
     <div className="p-6 rounded-xl bg-[#13141b] border border-gray-800 relative overflow-hidden">
       
-      {/* Toast Alert de Éxito Interactivo */}
+      {/* Toast Alert de Ã‰xito Interactivo */}
       {toastMessage && (
         <div className="absolute top-4 right-4 left-4 p-3 bg-blue-600 border border-blue-500 rounded-lg text-white text-xs font-semibold flex items-center justify-between shadow-lg shadow-black/50 z-20 animate-slideDown">
           <div className="flex items-center gap-2">
@@ -193,14 +195,14 @@ function TransactionList({ searchQuery }) {
         <span className={`px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${
           criticalCount > 0 ? "bg-red-500/20 text-red-400" : "bg-gray-800 text-gray-400"
         }`}>
-          {criticalCount} críticas pendientes
+          {criticalCount} crÃ­ticas pendientes
         </span>
       </div>
 
       {filteredTx.length === 0 ? (
         <div className="text-center py-12 border border-dashed border-gray-800 rounded-lg bg-[#0a0a0f]">
           <CheckCircle className="w-10 h-10 text-green-400 mx-auto mb-3 animate-pulse" />
-          <p className="text-white text-sm font-medium">¡Todo Bajo Control!</p>
+          <p className="text-white text-sm font-medium">Â¡Todo Bajo Control!</p>
           <p className="text-gray-500 text-xs mt-1">No hay alertas de transacciones sospechosas pendientes.</p>
         </div>
       ) : (
@@ -210,7 +212,7 @@ function TransactionList({ searchQuery }) {
             const isInvestigating = transaction.actionState === "investigating";
             const isPending = transaction.actionState === "pending" || !transaction.actionState;
             
-            // Determinar estilo y etiqueta según acción tomada
+            // Determinar estilo y etiqueta segÃºn acciÃ³n tomada
             let activeStyle = riskStyles[transaction.risk];
             let activeLabel = riskLabels[transaction.risk];
             if (isBlocked) {
@@ -326,3 +328,4 @@ function XIcon(props) {
 }
 
 export default TransactionList;
+

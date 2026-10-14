@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, AlertCircle } from "lucide-react";
 import OnboardingLayout from "../components/onboarding/OnboardingLayout";
@@ -9,8 +9,6 @@ import { formatCurrency } from "../utils/format";
 
 function QuotePage() {
   const navigate = useNavigate();
-  const [validationErrors, setValidationErrors] = useState({});
-  const [isValid, setIsValid] = useState(false);
   const onboarding = getOnboardingData();
   const business = onboarding.business;
   const plan = PLANS[onboarding.planId];
@@ -20,12 +18,12 @@ function QuotePage() {
       navigate("/registro");
       return;
     }
-    const result = validateBusinessData(business);
-    setValidationErrors(result.errors);
-    setIsValid(result.isValid);
   }, [business, plan, navigate]);
 
   if (!business || !plan) return null;
+  const validationResult = validateBusinessData(business);
+  const validationErrors = validationResult.errors;
+  const isValid = validationResult.isValid;
 
   function handleAccept(accepted) {
     if (!isValid) return;
@@ -39,7 +37,7 @@ function QuotePage() {
 
   return (
     <OnboardingLayout
-      title="Cotización"
+      title="CotizaciÃ³n"
       subtitle="Revisa el precio y beneficios de tu plan seleccionado"
       step={3}
       totalSteps={5}
@@ -50,14 +48,14 @@ function QuotePage() {
             <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
             <div>
               <p className="text-white font-medium mb-2">
-                Datos empresariales inválidos
+                Datos empresariales invÃ¡lidos
               </p>
               <p className="text-sm text-gray-400 mb-3">
                 Corrige los siguientes errores para continuar:
               </p>
               <ul className="space-y-1">
                 {Object.values(validationErrors).map((err) => (
-                  <li key={err} className="text-sm text-red-400">• {err}</li>
+                  <li key={err} className="text-sm text-red-400">â€¢ {err}</li>
                 ))}
               </ul>
             </div>
@@ -112,7 +110,7 @@ function QuotePage() {
               onClick={() => handleAccept(true)}
               className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-colors"
             >
-              Sí, aceptar plan
+              SÃ­, aceptar plan
             </button>
           </div>
         </div>
@@ -122,3 +120,4 @@ function QuotePage() {
 }
 
 export default QuotePage;
+

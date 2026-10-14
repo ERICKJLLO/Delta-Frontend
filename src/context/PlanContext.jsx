@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+﻿import { createContext, useContext } from "react";
 import { useAuth } from "./AuthContext";
 import { PLANS } from "../constants/plans";
 
@@ -9,7 +9,7 @@ const PLAN_FEATURES = {
   basic: [
     'dashboard',          // Dashboard general
     'monitoring',         // Monitoreo en tiempo real
-    'transactions_view',  // Solo visualización de transacciones
+    'transactions_view',  // Solo visualizaciÃ³n de transacciones
     'alerts_basic',       // Alertas simples sin filtros avanzados
   ],
   professional: [
@@ -19,9 +19,9 @@ const PLAN_FEATURES = {
     'transactions_actions', // Ejecutar acciones en transacciones (bloquear/aprobar)
     'alerts_basic',
     'alerts_advanced',    // Alertas avanzadas
-    'analysis',           // Análisis predictivo e interactivo, mapa de calor
+    'analysis',           // AnÃ¡lisis predictivo e interactivo, mapa de calor
     'delta_ai_limited',   // Delta AI (asistente limitado)
-    'reports',            // Exportación y creación de reportes personalizados
+    'reports',            // ExportaciÃ³n y creaciÃ³n de reportes personalizados
   ],
   enterprise: [
     'dashboard',
@@ -33,7 +33,7 @@ const PLAN_FEATURES = {
     'analysis',
     'delta_ai_full',       // Delta AI completo e ilimitado
     'reports',
-    'settings_advanced',  // Configuración de API / Core bancario
+    'settings_advanced',  // ConfiguraciÃ³n de API / Core bancario
   ]
 };
 
@@ -45,16 +45,16 @@ export function PlanProvider({ children }) {
   const planDetails = PLANS[planId] || PLANS.basic;
 
   /**
-   * Verifica si el plan actual tiene acceso a una característica específica.
-   * Soporta chequeos de features heredadas o jerárquicas.
+   * Verifica si el plan actual tiene acceso a una caracterÃ­stica especÃ­fica.
+   * Soporta chequeos de features heredadas o jerÃ¡rquicas.
    */
   const canAccess = (feature) => {
     const features = PLAN_FEATURES[planId] || PLAN_FEATURES.basic;
     
-    // Si la característica buscada está directamente en el plan
+    // Si la caracterÃ­stica buscada estÃ¡ directamente en el plan
     if (features.includes(feature)) return true;
     
-    // Reglas de fallback y permisos jerárquicos
+    // Reglas de fallback y permisos jerÃ¡rquicos
     if (feature === 'delta_ai') {
       return features.includes('delta_ai_limited') || features.includes('delta_ai_full');
     }
@@ -77,6 +77,7 @@ export function PlanProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePlan() {
   const context = useContext(PlanContext);
   if (!context) {
@@ -84,3 +85,5 @@ export function usePlan() {
   }
   return context;
 }
+
+

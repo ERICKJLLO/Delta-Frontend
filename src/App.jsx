@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+﻿import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
@@ -9,8 +9,20 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 
 function HomeRedirect() {
-  // Redirigir siempre al dashboard (sin login)
-  return <Navigate to="/dashboard" replace />;
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0d0e14] flex items-center justify-center text-gray-400">
+        Cargando...
+      </div>
+    );
+  }
+  return (
+    <Navigate
+      to={isAuthenticated ? "/dashboard" : "/login"}
+      replace
+    />
+  );
 }
 
 function App() {
